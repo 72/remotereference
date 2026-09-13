@@ -149,13 +149,24 @@ function Detail({ record, onClose }: { record: Record; onClose: () => void }) {
         transition={fade}
       />
 
-      <motion.div className="absolute inset-0" style={{ y, scale }}>
+      {/*
+        The drag-driven radius lives here, on the wrapper, and clips via
+        overflow — deliberately NOT on the layoutId element below.
+        Motion writes inline border-radius onto whichever element a shared
+        layout animation is projecting, and never clears it. Putting a
+        MotionValue radius on the shared element left `border-radius: 0%`
+        stuck on the list card after it morphed back, so every card that had
+        been opened lost its corners.
+      */}
+      <motion.div
+        className="absolute inset-0 overflow-hidden"
+        style={{ y, scale, borderRadius: radius }}
+      >
         {/* Opaque: a full-screen sheet gains nothing from translucency, and
             letting the scrim bleed through only muddies the ground. */}
         <motion.div
           layoutId={`card-${record.id}`}
           transition={morph}
-          style={{ borderRadius: radius }}
           className="bg-raised ring-hairline flex h-full flex-col overflow-hidden ring-1 ring-inset"
         >
           <motion.div

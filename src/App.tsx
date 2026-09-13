@@ -26,7 +26,7 @@ export default function App() {
           style={
             {
               "--chrome-top": "calc(var(--safe-top, 0px) + 3.25rem)",
-              "--chrome-bottom": "calc(var(--safe-bottom, 0px) + 5.5rem)",
+              "--chrome-bottom": "calc(min(var(--safe-bottom, 0px), 1rem) + 5.5rem)",
             } as CSSProperties
           }
         >

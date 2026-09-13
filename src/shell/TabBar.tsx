@@ -23,12 +23,17 @@ export function TabBar() {
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
+  // The bar floats *over* the home-indicator zone rather than clearing the
+  // whole safe area, so the inset is capped: adding the full 34pt inset on top
+  // of a gap leaves it stranded well above the bottom edge.
+  const insetBottom = "calc(min(var(--safe-bottom, 0px), 1rem) + 0.5rem)";
+
   return (
     <motion.nav
       className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex justify-center px-4"
       animate={{ y: hideTabBar ? 140 : 0, opacity: hideTabBar ? 0 : 1 }}
       transition={morph}
-      style={{ paddingBottom: "calc(var(--safe-bottom, 0px) + 0.75rem)" }}
+      style={{ paddingBottom: insetBottom }}
     >
       <div className="glass pointer-events-auto flex items-stretch gap-1 rounded-full p-1.5">
         {TABS.map(({ to, label, Icon, owns }) => {

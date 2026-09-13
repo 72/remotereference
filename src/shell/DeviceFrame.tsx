@@ -14,7 +14,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
   if (!framed) {
     return (
       <div
-        className="bg-canvas relative h-[100dvh] w-full overflow-hidden"
+        className="bg-canvas relative h-full w-full overflow-hidden"
         style={
           {
             "--safe-top": "env(safe-area-inset-top, 0px)",
@@ -28,7 +28,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="flex h-[100dvh] w-full items-center justify-center bg-[#e7e5e0] p-6">
+    <div className="flex h-full w-full items-center justify-center bg-[#e7e5e0] p-6">
       <div
         className="relative rounded-[3.5rem] bg-[#1c1b19] p-[3px] shadow-[0_24px_70px_-20px_rgba(55,53,47,0.45)]"
         style={{

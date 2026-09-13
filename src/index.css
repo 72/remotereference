@@ -49,10 +49,19 @@
   --shadow-contact: rgba(55, 53, 47, 0.06);
 }
 
+/*
+ * All three must track the *dynamic* viewport. `height: 100%` resolves against
+ * the large viewport in iOS Safari (as if the toolbar were hidden) while the
+ * app shell sized itself with dvh, so the shell ended up shorter than the page
+ * and left phantom space below it — invisible, since it is the same canvas
+ * colour, but it pushed the floating tab bar roughly a toolbar's height up
+ * from the real bottom edge.
+ */
 html,
 body,
 #root {
-  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
 }
 
 body {
