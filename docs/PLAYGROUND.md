@@ -294,9 +294,36 @@ tapping one expands into a full detail screen via `layoutId`, with the nav bar a
 actions persisting and morphing across the transition. This targets objectives 2.1, 2.2, 2.4,
 and 2.6 simultaneously, so the fidelity bar is provable from the very first preview.
 
-**Then, in rough order:**
-- Draggable bottom sheet with detents — velocity settling, rubber-banding, interruptible drag
-  (objectives 2.3, 2.4, 2.5)
-- Tab bar with persistent chrome across multiple sections
+**Shipped since:**
 - Gallery with live spring controls, for tuning motion tokens by feel
+- Draggable bottom sheet with detents (objectives 2.3, 2.4, 2.5) — see §11
+
+**Still ahead, in rough order:**
+- Tab bar with persistent chrome across multiple sections
 - Interruptible swipe-back navigation gesture
+- Dark mode, since the tokens are already shaped for it
+- A pinch / multi-touch study, which is the reason `@use-gesture` is in the stack
+
+## 11. Gesture arbitration
+
+The bottom sheet surfaced the constraint that will shape every scrollable,
+draggable surface built here, so it is worth stating once.
+
+**Once the browser has begun a native scroll for a touch, it cannot be taken back.**
+`preventDefault()` on a later `touchmove` is ignored. So ownership of a gesture has to be
+decided on its *first* move, and the listener has to be non-passive — which means binding
+through `@use-gesture`'s `target` option rather than spreading props, since React attaches
+its own listeners passively.
+
+The rule the sheet uses, which matches how a sheet behaves natively:
+
+| Condition | Owner |
+|---|---|
+| Gesture started outside the scroller (grabber, header) | Sheet |
+| Sheet below its top detent | Sheet — content must not scroll while partially open |
+| At top detent, content at `scrollTop` 0, dragging **down** | Sheet — this is the handoff |
+| Anything else | Native scroll, which keeps real momentum |
+
+The deliberate consequence: scrolling is never reimplemented. Native scroll is left alone
+wherever it should win, because a JS reimplementation loses iOS momentum and always feels
+worse (see §8).
