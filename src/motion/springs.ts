@@ -19,6 +19,10 @@ export const morph: Transition = { type: "spring", duration: 0.42, bounce: 0.08 
 /** Cross-fades riding alongside a morph. Opacity wants duration, not physics. */
 export const fade: Transition = { duration: 0.2, ease: [0.4, 0, 0.2, 1] };
 
-export const springs = { smooth, snappy, bouncy, morph, fade } as const;
+/** Sheet settling into a detent: enough travel to read as weight, no overshoot
+ *  past the detent it just landed on. */
+export const sheet: Transition = { type: "spring", duration: 0.45, bounce: 0.06 };
+
+export const springs = { smooth, snappy, bouncy, morph, sheet, fade } as const;
 
 export type SpringToken = keyof typeof springs;
