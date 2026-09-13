@@ -14,7 +14,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
   if (!framed) {
     return (
       <div
-        className="relative h-[100dvh] w-full overflow-hidden bg-black"
+        className="bg-canvas relative h-[100dvh] w-full overflow-hidden"
         style={
           {
             "--safe-top": "env(safe-area-inset-top, 0px)",
@@ -28,9 +28,9 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div className="flex h-[100dvh] w-full items-center justify-center bg-neutral-900 p-6">
+    <div className="flex h-[100dvh] w-full items-center justify-center bg-[#e7e5e0] p-6">
       <div
-        className="relative rounded-[3.5rem] bg-black p-[3px] shadow-2xl ring-1 ring-white/10"
+        className="relative rounded-[3.5rem] bg-[#1c1b19] p-[3px] shadow-[0_24px_70px_-20px_rgba(55,53,47,0.45)]"
         style={{
           width: SCREEN.width + 6,
           height: SCREEN.height + 6,
@@ -38,7 +38,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
         }}
       >
         <div
-          className="relative h-full w-full overflow-hidden rounded-[3.3rem] bg-black"
+          className="bg-canvas relative h-full w-full overflow-hidden rounded-[3.3rem]"
           style={
             {
               "--safe-top": `${SCREEN.safeTop}px`,
@@ -47,7 +47,7 @@ export function DeviceFrame({ children }: { children: ReactNode }) {
           }
         >
           {children}
-          <div className="pointer-events-none absolute top-[11px] left-1/2 h-[35px] w-[125px] -translate-x-1/2 rounded-full bg-black" />
+          <div className="pointer-events-none absolute top-[11px] left-1/2 h-[35px] w-[125px] -translate-x-1/2 rounded-full bg-[#1c1b19]" />
         </div>
       </div>
     </div>

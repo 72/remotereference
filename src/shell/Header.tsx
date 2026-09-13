@@ -38,7 +38,7 @@ export function Header() {
                 exit={{ opacity: 0, scale: 0.6, x: -6 }}
                 whileTap={{ scale: 0.88 }}
                 transition={snappy}
-                className="glass pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full text-white"
+                className="glass text-ink pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full"
               >
                 <ChevronLeft className="h-[19px] w-[19px]" />
               </motion.button>
@@ -77,7 +77,7 @@ export function Header() {
                 whileTap={{ scale: 0.88 }}
                 transition={snappy}
                 className={`glass pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full ${
-                  action.active ? "glass-strong text-blue-300" : "text-white/85"
+                  action.active ? "glass-strong text-accent" : "text-ink-2"
                 }`}
               >
                 {action.icon}

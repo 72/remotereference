@@ -47,11 +47,11 @@ export function TabBar() {
                 <motion.span
                   layoutId="tab-selection"
                   transition={snappy}
-                  className="glass-strong absolute inset-0 rounded-full bg-white/15"
+                  className="absolute inset-0 rounded-full bg-white shadow-[0_1px_3px_rgba(55,53,47,0.12)]"
                 />
               )}
               <motion.span
-                animate={{ color: active ? "#fff" : "rgba(255,255,255,0.55)" }}
+                animate={{ color: active ? "#37352f" : "#93908a" }}
                 transition={snappy}
                 className="relative flex items-center gap-1.5"
               >

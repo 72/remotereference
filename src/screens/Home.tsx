@@ -16,7 +16,7 @@ export default function Home() {
         paddingBottom: "var(--chrome-bottom)",
       }}
     >
-      <p className="mb-4 px-1 text-[13px] leading-snug text-white/45">
+      <p className="mb-4 px-1 text-[13px] leading-snug text-ink-3">
         Interaction studies. Each one targets a specific fidelity objective.
       </p>
 
@@ -38,12 +38,12 @@ export default function Home() {
             />
             <div className="px-4 pt-2 pb-4">
               <h2 className="text-[16px] font-semibold tracking-tight">{p.title}</h2>
-              <p className="mt-1 text-[13px] leading-snug text-white/55">{p.blurb}</p>
+              <p className="mt-1 text-[13px] leading-snug text-ink-2">{p.blurb}</p>
               <div className="mt-3 flex flex-wrap gap-1.5">
                 {p.objectives.map((o) => (
                   <span
                     key={o}
-                    className="rounded-full bg-white/12 px-2.5 py-[3px] text-[10px] font-medium text-white/70"
+                    className="rounded-full bg-tint px-2.5 py-[3px] text-[10px] font-medium text-ink-2"
                   >
                     {o}
                   </span>

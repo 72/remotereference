@@ -33,7 +33,7 @@ export default function Gallery() {
     >
       <section className="glass rounded-[var(--radius-card)] p-4">
         <h2 className="text-[15px] font-semibold tracking-tight">Spring inspector</h2>
-        <p className="mt-1 text-[13px] leading-snug text-white/45">
+        <p className="mt-1 text-[13px] leading-snug text-ink-3">
           Tap the track to replay. Motion's duration/bounce maps onto SwiftUI's
           response/dampingFraction.
         </p>
@@ -42,7 +42,7 @@ export default function Gallery() {
           type="button"
           onClick={() => setFlipped((f) => !f)}
           ref={travel.ref}
-          className="mt-4 flex h-20 w-full items-center rounded-[var(--radius-inset)] bg-black/30 px-3 ring-1 ring-white/10 ring-inset"
+          className="mt-4 flex h-20 w-full items-center rounded-[var(--radius-inset)] bg-tint px-3 ring-1 ring-hairline ring-inset"
         >
           <motion.div
             className="h-12 w-12 rounded-xl bg-gradient-to-br from-blue-400 to-indigo-500"
@@ -63,8 +63,8 @@ export default function Gallery() {
               }}
               className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors ${
                 !custom && token === t
-                  ? "bg-blue-500 text-white"
-                  : "bg-white/10 text-white/60"
+                  ? "bg-accent text-white"
+                  : "bg-tint text-ink-2"
               }`}
             >
               {t}
@@ -74,7 +74,7 @@ export default function Gallery() {
             type="button"
             onClick={() => setCustom(true)}
             className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors ${
-              custom ? "bg-blue-500 text-white" : "bg-white/10 text-white/60"
+              custom ? "bg-accent text-white" : "bg-tint text-ink-2"
             }`}
           >
             custom
@@ -111,7 +111,7 @@ export default function Gallery() {
 
       <section className="glass mt-3 rounded-[var(--radius-card)] p-4">
         <h2 className="text-[15px] font-semibold tracking-tight">Press states</h2>
-        <p className="mt-1 text-[13px] leading-snug text-white/45">
+        <p className="mt-1 text-[13px] leading-snug text-ink-3">
           Scale on press, spring on release.
         </p>
         <div className="mt-3 flex gap-2.5">
@@ -122,7 +122,7 @@ export default function Gallery() {
               whileTap={{ scale: 0.94 }}
               transition={springs.snappy}
               className={`flex-1 rounded-full py-3 text-[14px] font-semibold ${
-                i === 0 ? "bg-blue-500 text-white" : "glass-strong glass text-white/85"
+                i === 0 ? "bg-accent text-white" : "glass-strong glass text-ink"
               }`}
             >
               {label}
@@ -172,8 +172,8 @@ function Slider({
   return (
     <label className="block">
       <div className="mb-1.5 flex items-baseline justify-between">
-        <span className="text-[12px] font-medium text-white/60">{label}</span>
-        <span className="font-mono text-[12px] text-white/40">{value.toFixed(2)}</span>
+        <span className="text-[12px] font-medium text-ink-2">{label}</span>
+        <span className="font-mono text-[12px] text-ink-3">{value.toFixed(2)}</span>
       </div>
       <input
         type="range"
@@ -182,7 +182,7 @@ function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className={`w-full accent-blue-500 ${disabled ? "opacity-50" : ""}`}
+        className={`w-full accent-accent ${disabled ? "opacity-50" : ""}`}
       />
     </label>
   );

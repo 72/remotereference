@@ -106,9 +106,9 @@ function ListCard({
         >
           {record.title}
         </motion.h3>
-        <p className="truncate text-[13px] text-white/50">{record.subtitle}</p>
+        <p className="truncate text-[13px] text-ink-2">{record.subtitle}</p>
       </div>
-      {saved && <Bookmark filled className="mr-1 h-4 w-4 shrink-0 text-blue-400" />}
+      {saved && <Bookmark filled className="mr-1 h-4 w-4 shrink-0 text-accent" />}
     </motion.button>
   );
 }
@@ -141,7 +141,7 @@ function Detail({ record, onClose }: { record: Record; onClose: () => void }) {
   return (
     <div className="absolute inset-0 z-20">
       <motion.div
-        className="absolute inset-0 bg-black"
+        className="absolute inset-0 bg-[#37352f]"
         style={{ opacity: scrimOpacity }}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -150,11 +150,13 @@ function Detail({ record, onClose }: { record: Record; onClose: () => void }) {
       />
 
       <motion.div className="absolute inset-0" style={{ y, scale }}>
+        {/* Opaque: a full-screen sheet gains nothing from translucency, and
+            letting the scrim bleed through only muddies the ground. */}
         <motion.div
           layoutId={`card-${record.id}`}
           transition={morph}
           style={{ borderRadius: radius }}
-          className="flex h-full flex-col overflow-hidden bg-neutral-950/80 ring-1 ring-white/10 ring-inset backdrop-blur-2xl"
+          className="bg-raised ring-hairline flex h-full flex-col overflow-hidden ring-1 ring-inset"
         >
           <motion.div
             layoutId={`media-${record.id}`}
@@ -193,12 +195,12 @@ function Detail({ record, onClose }: { record: Record; onClose: () => void }) {
               exit={{ opacity: 0 }}
               transition={{ ...morph, delay: 0.04 }}
             >
-              <p className="mt-1 text-[14px] text-white/50">{record.subtitle}</p>
-              <p className="mt-0.5 font-mono text-[11px] tracking-wide text-white/30 uppercase">
+              <p className="mt-1 text-[14px] text-ink-2">{record.subtitle}</p>
+              <p className="mt-0.5 font-mono text-[11px] tracking-wide text-ink-3 uppercase">
                 {record.meta}
               </p>
-              <p className="mt-5 text-[15px] leading-relaxed text-white/75">{record.body}</p>
-              <p className="mt-4 text-[13px] leading-relaxed text-white/35">
+              <p className="mt-5 text-[15px] leading-relaxed text-ink">{record.body}</p>
+              <p className="mt-4 text-[13px] leading-relaxed text-ink-3">
                 Drag the image down to dismiss — a slow drag past the threshold and a fast
                 flick below it both close, because release reads velocity, not just distance.
                 Grab it again mid-flight to catch it.

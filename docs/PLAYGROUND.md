@@ -206,6 +206,43 @@ meeting a hard divider.
 The material also needs something behind it worth refracting — a flat black app makes glass
 invisible — so an ambient colour field sits beneath the content.
 
+### Light mode palette
+
+The playground runs light. It is built the way apps known for light-mode craft build it,
+rather than by inverting the dark theme.
+
+| Token | Value | Rationale |
+|---|---|---|
+| `canvas` | `#f6f5f3` | Warm off-white ground. Never `#fff` — pure white glares, and it leaves raised surfaces nowhere brighter to go, flattening hierarchy. |
+| `raised` | `#fffefc` | Cards and sheets sit *above* the ground, so near-white reads as elevation. |
+| `ink` | `#37352f` | Warm charcoal. `#000` on a warm ground reads as a hole punched in the page. |
+| `ink-2` / `ink-3` | `#6b6862` / `#93908a` | Secondary and tertiary text, same hue, stepped lightness. |
+| `hairline` | `rgba(55,53,47,0.11)` | Alpha, not a solid grey, so edges sit correctly on any surface. |
+| `accent` | `#2383e2` | Colour as sparse punctuation, not as furniture. |
+
+**One temperature.** Every neutral is derived from the same warm hue — fills are tinted with
+the ink rather than with neutral grey. Mixing warm and cool neutrals is the most common way a
+light theme reads as uncrafted.
+
+**Restraint over shadow.** A hairline carries the edge; the shadow only lifts. Heavy diffuse
+shadow is what makes light UI read as Material rather than considered.
+
+### How glass inverts in light mode
+
+This is the part that does not translate from the dark theme. On a dark ground, glass reads
+because it is **brighter** than its backdrop. On a light ground it has nowhere brighter to go,
+so separation has to come from three other places:
+
+1. **Saturation lift** — colour behind the glass bleeds through more vividly than the flat
+   surface around it. This does most of the work of saying "material".
+2. **A hairline** to define the edge, since the specular rim alone vanishes against white.
+3. **A soft, warm-tinted shadow** for lift — warm, because a neutral black shadow on a warm
+   ground reads as dirt.
+
+The scroll edge effect also has to do more: blur alone is insufficient, so content passing
+under a bar is lifted toward the canvas colour as well, or dark bar text loses contrast over
+saturated media.
+
 ### The refraction ceiling
 
 Real Liquid Glass *lenses* the content behind it: it bends pixels, not just blurs them. On
