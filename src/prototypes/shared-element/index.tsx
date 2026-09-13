@@ -46,8 +46,14 @@ export default function SharedElement() {
 
   return (
     <div className="relative h-full">
-      <div className="scrollbar-none h-full overflow-y-auto overscroll-contain px-4 pt-3 pb-6">
-        <div className="flex flex-col gap-3">
+      <div
+        className="scrollbar-none h-full overflow-y-auto overscroll-contain px-4"
+        style={{
+          paddingTop: "calc(var(--chrome-top) + 0.5rem)",
+          paddingBottom: "var(--chrome-bottom)",
+        }}
+      >
+        <div className="flex flex-col gap-2.5">
           {records.map((r) => (
             <ListCard
               key={r.id}
@@ -82,12 +88,12 @@ function ListCard({
       layoutId={`card-${record.id}`}
       transition={morph}
       whileTap={{ scale: 0.975 }}
-      className="flex w-full items-center gap-3 overflow-hidden rounded-2xl bg-white/[0.06] p-2.5 text-left ring-1 ring-white/10"
+      className="glass flex w-full items-center gap-3 overflow-hidden rounded-[var(--radius-card)] p-2.5 text-left"
     >
       <motion.div
         layoutId={`media-${record.id}`}
         transition={morph}
-        className="h-16 w-16 shrink-0 rounded-xl"
+        className="h-16 w-16 shrink-0 rounded-[var(--radius-inset)]"
         style={{
           backgroundImage: `linear-gradient(135deg, ${record.accent[0]}, ${record.accent[1]})`,
         }}
@@ -111,7 +117,7 @@ function Detail({ record, onClose }: { record: Record; onClose: () => void }) {
   const y = useMotionValue(0);
   const scrimOpacity = useTransform(y, [0, 320], [1, 0.2]);
   const scale = useTransform(y, [0, 320], [1, 0.92]);
-  const radius = useTransform(y, [0, 120], [0, 28]);
+  const radius = useTransform(y, [0, 120], [0, 40]);
   const dragging = useRef(false);
 
   // Drag lives on the hero only, so the body below can scroll natively.
@@ -148,25 +154,31 @@ function Detail({ record, onClose }: { record: Record; onClose: () => void }) {
           layoutId={`card-${record.id}`}
           transition={morph}
           style={{ borderRadius: radius }}
-          className="flex h-full flex-col overflow-hidden bg-neutral-950 ring-1 ring-white/10"
+          className="flex h-full flex-col overflow-hidden bg-neutral-950/80 ring-1 ring-white/10 ring-inset backdrop-blur-2xl"
         >
           <motion.div
             layoutId={`media-${record.id}`}
             transition={morph}
-            className="relative h-60 w-full shrink-0"
+            className="relative h-72 w-full shrink-0"
             style={{
               backgroundImage: `linear-gradient(135deg, ${record.accent[0]}, ${record.accent[1]})`,
             }}
           >
             {/* Plain element: use-gesture's DOM handlers and Motion's props don't mix. */}
             <div {...bindHero()} className="absolute inset-0 touch-none">
-              <div className="absolute inset-x-0 top-2 flex justify-center">
-                <div className="h-1 w-9 rounded-full bg-white/40" />
+              <div
+                className="absolute inset-x-0 flex justify-center"
+                style={{ top: "calc(var(--safe-top, 0px) + 0.5rem)" }}
+              >
+                <div className="glass h-1.5 w-10 rounded-full" />
               </div>
             </div>
           </motion.div>
 
-          <div className="scrollbar-none min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pt-5 pb-8">
+          <div
+            className="scrollbar-none min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 pt-5"
+            style={{ paddingBottom: "calc(var(--safe-bottom, 0px) + 2rem)" }}
+          >
             <motion.h2
               layoutId={`title-${record.id}`}
               transition={morph}

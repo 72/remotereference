@@ -5,12 +5,17 @@ import { GridIcon, LayersIcon } from "./icons";
 import { morph, snappy } from "../motion/springs";
 
 const TABS = [
-  { to: "/", label: "Prototypes", Icon: LayersIcon },
-  { to: "/gallery", label: "Gallery", Icon: GridIcon },
+  // A prototype is a screen *within* the Prototypes section, so the tab stays
+  // selected while you are inside one.
+  { to: "/", label: "Prototypes", Icon: LayersIcon, owns: (p: string) => p === "/" || p.startsWith("/p/") },
+  { to: "/gallery", label: "Gallery", Icon: GridIcon, owns: (p: string) => p.startsWith("/gallery") },
 ];
 
 /**
- * Also mounted once. Entering a prototype slides it out of the way rather than
+ * A detached capsule floating over content rather than a bar welded to the
+ * bottom edge — the structural half of the new design language.
+ *
+ * Also mounted once: entering a prototype slides it away instead of
  * unmounting it, so returning re-uses the same element.
  */
 export function TabBar() {
@@ -20,37 +25,40 @@ export function TabBar() {
 
   return (
     <motion.nav
-      className="relative z-30 shrink-0 border-t border-white/10 bg-black/70 backdrop-blur-xl"
-      animate={{ y: hideTabBar ? "100%" : "0%" }}
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex justify-center px-4"
+      animate={{ y: hideTabBar ? 140 : 0, opacity: hideTabBar ? 0 : 1 }}
       transition={morph}
-      style={{ paddingBottom: "var(--safe-bottom, 0px)" }}
+      style={{ paddingBottom: "calc(var(--safe-bottom, 0px) + 0.75rem)" }}
     >
-      <div className="flex h-[49px] items-stretch">
-        {TABS.map(({ to, label, Icon }) => {
-          const active = pathname === to;
+      <div className="glass pointer-events-auto flex items-stretch gap-1 rounded-full p-1.5">
+        {TABS.map(({ to, label, Icon, owns }) => {
+          const active = owns(pathname);
           return (
-            <button
+            <motion.button
               key={to}
               type="button"
               onClick={() => navigate(to)}
-              className="relative flex flex-1 flex-col items-center justify-center gap-0.5"
+              whileTap={{ scale: 0.94 }}
+              transition={snappy}
+              className="relative flex items-center gap-1.5 rounded-full px-4 py-2"
             >
+              {/* The selection is its own glass capsule that slides between tabs. */}
               {active && (
                 <motion.span
-                  layoutId="tab-indicator"
+                  layoutId="tab-selection"
                   transition={snappy}
-                  className="absolute inset-x-5 top-0 h-[2px] rounded-full bg-blue-400"
+                  className="glass-strong absolute inset-0 rounded-full bg-white/15"
                 />
               )}
               <motion.span
-                animate={{ color: active ? "rgb(96 165 250)" : "rgba(255,255,255,0.45)" }}
+                animate={{ color: active ? "#fff" : "rgba(255,255,255,0.55)" }}
                 transition={snappy}
-                className="flex flex-col items-center gap-0.5"
+                className="relative flex items-center gap-1.5"
               >
-                <Icon className="h-[22px] w-[22px]" />
-                <span className="text-[10px] font-medium tracking-tight">{label}</span>
+                <Icon className="h-[19px] w-[19px]" />
+                <span className="text-[13px] font-semibold tracking-tight">{label}</span>
               </motion.span>
-            </button>
+            </motion.button>
           );
         })}
       </div>

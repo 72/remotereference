@@ -1,5 +1,7 @@
+import type { CSSProperties } from "react";
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 import { DeviceFrame } from "./shell/DeviceFrame";
+import { AmbientBackground } from "./shell/AmbientBackground";
 import { ChromeProvider } from "./shell/chrome";
 import { Header } from "./shell/Header";
 import { TabBar } from "./shell/TabBar";
@@ -18,10 +20,20 @@ export default function App() {
   return (
     <DeviceFrame>
       <ChromeProvider>
-        {/* Header and TabBar sit outside <Routes> — they never unmount. */}
-        <div className="flex h-full flex-col bg-black">
-          <Header />
-          <main className="relative min-h-0 flex-1">
+        {/* Screens read these to clear the floating bars they scroll beneath. */}
+        <div
+          className="relative h-full overflow-hidden"
+          style={
+            {
+              "--chrome-top": "calc(var(--safe-top, 0px) + 3.25rem)",
+              "--chrome-bottom": "calc(var(--safe-bottom, 0px) + 5.5rem)",
+            } as CSSProperties
+          }
+        >
+          <AmbientBackground />
+
+          {/* Content runs edge to edge; the bars float above it. */}
+          <main className="absolute inset-0">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/gallery" element={<Gallery />} />
@@ -29,6 +41,8 @@ export default function App() {
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>
+
+          <Header />
           <TabBar />
         </div>
       </ChromeProvider>

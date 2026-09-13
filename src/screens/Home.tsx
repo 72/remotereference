@@ -9,7 +9,13 @@ export default function Home() {
   useChrome({ title: "Prototypes" }, []);
 
   return (
-    <div className="scrollbar-none h-full overflow-y-auto overscroll-contain px-4 pt-3 pb-6">
+    <div
+      className="scrollbar-none h-full overflow-y-auto overscroll-contain px-4"
+      style={{
+        paddingTop: "calc(var(--chrome-top) + 0.5rem)",
+        paddingBottom: "var(--chrome-bottom)",
+      }}
+    >
       <p className="mb-4 px-1 text-[13px] leading-snug text-white/45">
         Interaction studies. Each one targets a specific fidelity objective.
       </p>
@@ -22,22 +28,22 @@ export default function Home() {
             onClick={() => navigate(`/p/${p.slug}`)}
             whileTap={{ scale: 0.975 }}
             transition={snappy}
-            className="overflow-hidden rounded-2xl bg-white/[0.06] text-left ring-1 ring-white/10"
+            className="glass overflow-hidden rounded-[var(--radius-card)] text-left"
           >
             <div
-              className="h-24 w-full"
+              className="m-1.5 h-24 rounded-[var(--radius-inset)]"
               style={{
                 backgroundImage: `linear-gradient(135deg, ${p.accent[0]}, ${p.accent[1]})`,
               }}
             />
-            <div className="p-3.5">
-              <h2 className="text-[15px] font-semibold tracking-tight">{p.title}</h2>
-              <p className="mt-1 text-[13px] leading-snug text-white/50">{p.blurb}</p>
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
+            <div className="px-4 pt-2 pb-4">
+              <h2 className="text-[16px] font-semibold tracking-tight">{p.title}</h2>
+              <p className="mt-1 text-[13px] leading-snug text-white/55">{p.blurb}</p>
+              <div className="mt-3 flex flex-wrap gap-1.5">
                 {p.objectives.map((o) => (
                   <span
                     key={o}
-                    className="rounded-full bg-white/10 px-2 py-[3px] text-[10px] font-medium text-white/60"
+                    className="rounded-full bg-white/12 px-2.5 py-[3px] text-[10px] font-medium text-white/70"
                   >
                     {o}
                   </span>

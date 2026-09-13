@@ -3,10 +3,23 @@
 @theme {
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui,
     sans-serif;
+
+  /* Concentric radii. Nested surfaces step down by their padding so corners
+     stay visually concentric rather than arbitrarily rounded. */
+  --radius-screen: 2.75rem;
+  --radius-sheet: 2rem;
+  --radius-card: 1.5rem;
+  --radius-inset: 1rem;
 }
 
 :root {
   color-scheme: dark;
+
+  /* Liquid Glass is a material, not a colour. These are the knobs it exposes. */
+  --glass-tint: rgba(255, 255, 255, 0.07);
+  --glass-tint-strong: rgba(255, 255, 255, 0.12);
+  --glass-blur: 32px;
+  --glass-saturate: 200%;
 }
 
 html,
@@ -44,6 +57,74 @@ body {
     padding: 0;
     cursor: pointer;
   }
+}
+
+/*
+ * Glass material.
+ *
+ * True Liquid Glass refracts (lenses) the content behind it. On the web that
+ * needs `backdrop-filter: url(#svgFilter)` with feDisplacementMap, which is
+ * Chromium-only — Safari ignores it, and Safari is the target. So this builds
+ * the parts that do survive on iPhone: translucency, saturation lift, and a
+ * directional specular rim, which is what actually reads as the material.
+ */
+@utility glass {
+  position: relative;
+  background: var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow:
+    0 12px 40px -12px rgba(0, 0, 0, 0.7),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.05);
+
+  /* The specular rim: brightest where light would catch the top-left and
+     bounce off the lower-right, falling off through the middle. */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.14) 26%,
+      rgba(255, 255, 255, 0.04) 50%,
+      rgba(255, 255, 255, 0.16) 74%,
+      rgba(255, 255, 255, 0.5) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@utility glass-strong {
+  --glass-tint: var(--glass-tint-strong);
+}
+
+/*
+ * Scroll edge effect. iOS 26 fades and blurs content where it passes under a
+ * bar instead of cutting it with a hard divider.
+ */
+@utility scroll-edge {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+}
+
+@utility scroll-edge-bottom {
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  mask-image: linear-gradient(to top, #000 45%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to top, #000 45%, transparent 100%);
 }
 
 .scrollbar-none {

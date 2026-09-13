@@ -181,7 +181,43 @@ system stays coherent and tunable from one place.
 
 ---
 
-## 7. Known constraints
+## 7. Visual language — Liquid Glass
+
+The playground targets Apple's current design language (iOS 26), not the pre-26 flat
+style. Four things carry it:
+
+**Floating, detached chrome.** The tab bar is a capsule inset from every edge, and the
+navigation bar is transparent — glass belongs to the *controls*, not to a full-width slab.
+Content runs edge to edge underneath. This is the structural half of the language and the
+biggest perceptual shift away from the old style.
+
+**The glass material.** Translucency plus a saturation lift (`backdrop-filter: blur()
+saturate()`), carrying a **directional specular rim** — a gradient border, masked to the
+edge, brightest where light would catch the top-left and bounce off the lower-right. The rim
+is what actually reads as glass; blur alone reads as the old frosted style.
+
+**Concentric radii.** Nested surfaces step down by their padding (`--radius-screen` →
+`--radius-sheet` → `--radius-card` → `--radius-inset`) so corners stay concentric instead of
+arbitrarily rounded.
+
+**Scroll edge effect.** Content passing under a bar fades and blurs into it rather than
+meeting a hard divider.
+
+The material also needs something behind it worth refracting — a flat black app makes glass
+invisible — so an ambient colour field sits beneath the content.
+
+### The refraction ceiling
+
+Real Liquid Glass *lenses* the content behind it: it bends pixels, not just blurs them. On
+the web that requires `backdrop-filter: url(#svgFilter)` driving an SVG `feDisplacementMap`.
+**That is Chromium-only — Safari ignores SVG filters in `backdrop-filter`**, and Safari on a
+phone is this project's actual target. Building refraction would produce an effect that looks
+right in desktop Chrome and silently degrades on the device that matters.
+
+So refraction is deliberately not implemented. Everything above works in Safari, and together
+they carry the language; lensing is the one component that does not survive the trip.
+
+## 8. Known constraints
 
 **Haptics are not available.** iOS Safari has never implemented the Vibration API. A
 well-known workaround abused the `<input type="checkbox" switch>` element (Safari 17.4+) to
@@ -199,7 +235,7 @@ anything where browser chrome would interfere.
 
 ---
 
-## 8. Workflow
+## 9. Workflow
 
 Laptop-optional by design:
 
@@ -214,7 +250,7 @@ Production: `72remote.netlify.app`
 
 ---
 
-## 9. Roadmap
+## 10. Roadmap
 
 **First build — playground shell + shared-element list → detail.** A list of cards where
 tapping one expands into a full detail screen via `layoutId`, with the nav bar and header
