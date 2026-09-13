@@ -1,0 +1,178 @@
+@import "tailwindcss";
+
+/*
+ * Light mode, built the way apps known for light-mode craft build it:
+ * a warm off-white ground rather than clinical white, warm charcoal rather
+ * than black, and one neutral temperature that every grey is derived from.
+ */
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui,
+    sans-serif;
+
+  /* Ground is never #fff — pure white glares and flattens hierarchy, since
+     surfaces above it have nowhere brighter to go. */
+  --color-canvas: #f6f5f3;
+  --color-raised: #fffefc;
+
+  /* Warm charcoal, not black. #000 on a warm ground reads as a hole. */
+  --color-ink: #37352f;
+  --color-ink-2: #6b6862;
+  --color-ink-3: #93908a;
+
+  --color-hairline: rgba(55, 53, 47, 0.11);
+  /* Fills are tinted with the ink, not with neutral grey, so every surface
+     stays on the same temperature. */
+  --color-tint: rgba(55, 53, 47, 0.055);
+  --color-tint-2: rgba(55, 53, 47, 0.1);
+  --color-accent: #2383e2;
+  --color-accent-soft: rgba(35, 131, 226, 0.12);
+
+  /* Concentric radii. Nested surfaces step down by their padding so corners
+     stay visually concentric rather than arbitrarily rounded. */
+  --radius-screen: 2.75rem;
+  --radius-sheet: 2rem;
+  --radius-card: 1.5rem;
+  --radius-inset: 1rem;
+}
+
+:root {
+  color-scheme: light;
+
+  /* Liquid Glass is a material, not a colour. These are the knobs it exposes. */
+  --glass-tint: rgba(255, 255, 255, 0.7);
+  --glass-tint-strong: rgba(255, 255, 255, 0.88);
+  --glass-blur: 28px;
+  --glass-saturate: 180%;
+
+  /* Shadows carry the warmth of the ground rather than being neutral black. */
+  --shadow-ambient: rgba(55, 53, 47, 0.13);
+  --shadow-contact: rgba(55, 53, 47, 0.06);
+}
+
+/*
+ * All three must track the *dynamic* viewport. `height: 100%` resolves against
+ * the large viewport in iOS Safari (as if the toolbar were hidden) while the
+ * app shell sized itself with dvh, so the shell ended up shorter than the page
+ * and left phantom space below it — invisible, since it is the same canvas
+ * colour, but it pushed the floating tab bar roughly a toolbar's height up
+ * from the real bottom edge.
+ */
+html,
+body,
+#root {
+  height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  /* The playground owns its own scrolling; the page itself never scrolls. */
+  overscroll-behavior: none;
+}
+
+/* Resets must be layered: unlayered rules outrank Tailwind's utility layer
+   regardless of specificity, which would silently kill utilities on buttons. */
+@layer base {
+  /* Gestures must never be intercepted by browser scroll, tap highlight, or
+     text selection — dragging a surface should never select the text on it. */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+}
+
+/*
+ * Glass material.
+ *
+ * True Liquid Glass refracts (lenses) the content behind it. On the web that
+ * needs `backdrop-filter: url(#svgFilter)` with feDisplacementMap, which is
+ * Chromium-only — Safari ignores it, and Safari is the target.
+ *
+ * Light mode inverts how the material separates. On a dark ground, glass reads
+ * because it is brighter than its backdrop. On a light ground it has nowhere
+ * brighter to go, so separation comes from three other places: a saturation
+ * lift so colour bleeds through more vividly than the flat surface around it,
+ * a hairline to define the edge, and a soft warm-tinted shadow for lift.
+ */
+@utility glass {
+  position: relative;
+  background: var(--glass-tint);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  /* Restrained: a hairline carries the edge and the shadow only lifts. Heavy
+     diffuse shadow is what makes light UI read as Material rather than crafted. */
+  box-shadow:
+    0 1px 2px var(--shadow-contact),
+    0 6px 18px -8px var(--shadow-ambient),
+    inset 0 0 0 0.5px var(--color-hairline);
+
+  /* Specular highlight. Weaker than in dark mode — on a light ground a strong
+     white rim disappears, so it only lifts the top edge where light lands. */
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(255, 255, 255, 0.45) 24%,
+      rgba(255, 255, 255, 0) 52%,
+      rgba(255, 255, 255, 0.3) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+}
+
+@utility glass-strong {
+  --glass-tint: var(--glass-tint-strong);
+}
+
+/*
+ * Scroll edge effect. iOS 26 fades and blurs content where it passes under a
+ * bar instead of cutting it with a hard divider.
+ */
+@utility scroll-edge {
+  /* Blur alone is not enough in light mode: content passing under the bar has
+     to be lifted toward the canvas too, or dark bar text loses contrast over
+     saturated media. */
+  background: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--color-canvas) 88%, transparent),
+    transparent
+  );
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
