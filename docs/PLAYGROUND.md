@@ -297,14 +297,34 @@ and 2.6 simultaneously, so the fidelity bar is provable from the very first prev
 **Shipped since:**
 - Gallery with live spring controls, for tuning motion tokens by feel
 - Draggable bottom sheet with detents (objectives 2.3, 2.4, 2.5) — see §11
+- Persistent chrome across sections (objectives 2.1, 2.2, 2.4, 2.5) — three sections
+  sharing one tab bar and one mini player, which expands into a full player in place
 
 **Still ahead, in rough order:**
-- Tab bar with persistent chrome across multiple sections
 - Interruptible swipe-back navigation gesture
 - Dark mode, since the tokens are already shaped for it
 - A pinch / multi-touch study, which is the reason `@use-gesture` is in the stack
 
-## 11. Gesture arbitration
+## 11. Keeping sections mounted
+
+Persistent chrome is the same idea applied one level down. The sections of a prototype are
+laid out as panes in a single horizontal track and translated into view, rather than swapped
+in and out of the tree.
+
+Two things fall out of that, both for free rather than by bookkeeping:
+
+- **Each section keeps its own scroll position**, because its scroller is never destroyed.
+  The alternative — saving and restoring `scrollTop` — is where this usually goes wrong,
+  since the restore lands a frame late and reads as a jump.
+- **The section transition is directional**, because moving between panes is a real
+  translation rather than a cross-fade between two unrelated screens.
+
+Chrome that spans sections — a tab bar, a mini player — is mounted outside the track
+entirely, so switching sections cannot move or remount it. A mini player that expands into a
+full player shares a `layoutId` with it, which is the same mechanism as §3's shared element,
+just applied to chrome rather than content.
+
+## 12. Gesture arbitration
 
 The bottom sheet surfaced the constraint that will shape every scrollable,
 draggable surface built here, so it is worth stating once.
